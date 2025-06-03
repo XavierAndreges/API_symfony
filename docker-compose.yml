@@ -26,6 +26,18 @@ services:
       - php
     restart: unless-stopped
 
+  node:
+    image: node:18
+    container_name: API_symfony_node
+    working_dir: /var/www/symfony
+    volumes:
+      - ./symfony:/var/www/symfony
+    ports:
+      - "8082:8082"
+    depends_on:
+      - php
+    command: tail -f /dev/null
+
   database:
     image: mysql:8.0
     container_name: API_symfony_db
