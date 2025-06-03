@@ -3,3 +3,20 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+# Route pour capturer le nom de la table depuis l'URL
+table_route:
+    path: /{table}
+    controller: App\Controller\TableController::index
+    requirements:
+        table: '[A-Za-z]+'
+    methods: [GET]
+
+# Route pour capturer le nom de la table et l'ID depuis l'URL
+item_route:
+    path: /{table}/{idRepName}
+    controller: App\Controller\ItemController::index
+    requirements:
+        table: '[A-Za-z]+'
+        idRepName: '[A-Za-z0-9_-]+'
+    methods: [GET]
