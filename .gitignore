@@ -1,0 +1,10 @@
+# Fichiers système
+.DS_Store
+
+# Fichiers BD
+mp.sql
+
+# Fichiers de configuration sensibles
+.env
+.env.dev
+.env.prod
