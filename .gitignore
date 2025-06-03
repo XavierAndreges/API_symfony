@@ -1,5 +1,6 @@
 # Fichiers système
 .DS_Store
+Thumbs.db
 
 # Fichiers BD
 mp.sql
@@ -8,3 +9,29 @@ mp.sql
 .env
 .env.dev
 .env.prod
+
+# === Docker (si tu montes des volumes ou as des fichiers de build) ===
+docker/data/
+docker/mysql/
+docker/redis/
+docker/postgres/
+docker/logs/
+
+# PhpStorm / JetBrains
+.idea/
+
+# VSCode
+.vscode/
+
+# === Misc ===
+*.log
+*.cache
+*.swp
+*.swo
+
+# === Composer ===
+/symfony/composer.phar
+
+# === npm / Yarn (si utilisé) ===
+/symfony/package-lock.json
+/symfony/yarn.lock

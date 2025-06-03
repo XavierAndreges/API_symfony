@@ -20,11 +20,8 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Configure PHP-FPM
-RUN mkdir -p /var/run/php && \
-    echo "listen = /var/run/php/php-fpm.sock" >> /usr/local/etc/php-fpm.d/www.conf && \
-    echo "listen.owner = www-data" >> /usr/local/etc/php-fpm.d/www.conf && \
-    echo "listen.group = www-data" >> /usr/local/etc/php-fpm.d/www.conf && \
-    echo "listen.mode = 0660" >> /usr/local/etc/php-fpm.d/www.conf
+RUN sed -i '/^listen =/d' /usr/local/etc/php-fpm.d/www.conf && \
+    echo "listen = 9000" >> /usr/local/etc/php-fpm.d/www.conf
 
 # Set working directory
 WORKDIR /var/www/symfony

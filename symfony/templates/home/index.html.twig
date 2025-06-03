@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+    <div style="text-align: center; padding: 50px;">
+        <h1>{{ message }}</h1>
+        <p>
+            <a href="{{ path('app_detail') }}" style="color: #007bff; text-decoration: none; font-size: 1.2em;">
+                Voir les détails
+            </a>
+        </p>
+    </div>
+{% endblock %} 
