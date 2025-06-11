@@ -1,0 +1,37 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: symfony-prod
+
+resources:
+  - ../base
+  - secrets.yaml
+
+patches:
+  - target:
+      kind: Deployment
+      name: symfony-php
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 2
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: xandreges/symfony-php:prod
+      - op: replace
+        path: /spec/template/spec/containers/0/env/0/valueFrom/secretKeyRef/name
+        value: gcp-db-credentials
+
+  - target:
+      kind: Ingress
+      name: symfony-ingress
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: api.symfony.com
+
+configMapGenerator:
+  - name: symfony-config
+    literals:
+      - APP_ENV=prod
+      - APP_DEBUG=false 

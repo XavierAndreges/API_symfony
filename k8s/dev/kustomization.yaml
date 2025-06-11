@@ -1,0 +1,38 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: symfony-dev
+
+resources:
+  - ../base
+  - secrets.yaml
+  - mysql-service.yaml
+
+patches:
+  - target:
+      kind: Deployment
+      name: symfony-php
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: xandreges/symfony-php:latest
+      - op: replace
+        path: /spec/template/spec/containers/0/env/0/valueFrom/secretKeyRef/name
+        value: symfony-secrets
+
+  - target:
+      kind: Ingress
+      name: symfony-ingress
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: dev.symfony.local
+
+configMapGenerator:
+  - name: symfony-config
+    literals:
+      - APP_ENV=dev
+      - APP_DEBUG=true 

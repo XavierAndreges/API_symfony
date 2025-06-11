@@ -9,8 +9,10 @@ mp.sql
 .env
 .env.dev
 .env.prod
+k8s/prod/secrets.yaml
+k8s/dev/secrets.yaml
 
-# === Docker (si tu montes des volumes ou as des fichiers de build) ===
+# === Docker (si je montes des volumes ou crée des fichiers de build) ===
 docker/data/
 docker/mysql/
 docker/redis/

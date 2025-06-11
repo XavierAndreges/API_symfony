@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: symfony-php
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: symfony-php
+  template:
+    metadata:
+      labels:
+        app: symfony-php
+    spec:
+      initContainers:
+      - name: init-chmod
+        image: busybox
+        command: ["sh", "-c", "chmod -R 777 /var/www/symfony"]
+        volumeMounts:
+        - name: symfony-code
+          mountPath: /var/www/symfony
+      containers:
+      - name: php
+        image: symfony-php:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 9000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: symfony-db-secret
+              key: DATABASE_URL
+        volumeMounts:
+        - name: symfony-code
+          mountPath: /var/www/symfony
+      volumes:
+      - name: symfony-code
+        persistentVolumeClaim:
+          claimName: symfony-code-pvc
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: symfony-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: symfony-nginx
+  template:
+    metadata:
+      labels:
+        app: symfony-nginx
+    spec:
+      initContainers:
+      - name: init-chmod
+        image: busybox
+        command: ["sh", "-c", "chmod -R 777 /var/www/symfony"]
+        volumeMounts:
+        - name: symfony-code
+          mountPath: /var/www/symfony
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: symfony-code
+          mountPath: /var/www/symfony
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf
+      volumes:
+      - name: symfony-code
+        hostPath:
+          path: /Applications/MAMP/htdocs/mp/PHP_website/API_symfony/symfony
+          type: Directory
+      - name: nginx-config
+        configMap:
+          name: nginx-config 
