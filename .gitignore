@@ -37,3 +37,6 @@ docker/logs/
 # === npm / Yarn (si utilisé) ===
 /symfony/package-lock.json
 /symfony/yarn.lock
+
+# archibe pour chatGPT
+k8s.zip

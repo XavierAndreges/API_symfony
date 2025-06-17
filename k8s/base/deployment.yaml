@@ -76,9 +76,8 @@ spec:
           subPath: default.conf
       volumes:
       - name: symfony-code
-        hostPath:
-          path: /Applications/MAMP/htdocs/mp/PHP_website/API_symfony/symfony
-          type: Directory
+        persistentVolumeClaim:
+          claimName: symfony-code-pvc
       - name: nginx-config
         configMap:
           name: nginx-config 
