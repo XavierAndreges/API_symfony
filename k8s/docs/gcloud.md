@@ -73,21 +73,24 @@ gcloud iam workload-identity-pools create "github-actions-pool" \
   --display-name="GitHub Actions Pool"
 ```
 
-2. Créer un Provider dans ce pool :
+2. Créer un Provider dans ce pool : (attention à bien renseigner un attribute-condition )
 ```bash
-gcloud iam workload-identity-pools providers create-oidc "github-provider" \
+  gcloud iam workload-identity-pools providers create-oidc github-provider-3 \
+  --project="PROJECT_ID" \
   --location="global" \
-  --workload-identity-pool="github-actions-pool" \
-  --display-name="GitHub provider" \
-  --attribute-mapping="google.subject=assertion.sub,attribute.actor=assertion.actor,attribute.repository=assertion.repository" \
-  --issuer-uri="https://token.actions.githubusercontent.com"
+  --workload-identity-pool="github-actions-pool-3" \
+  --issuer-uri="https://token.actions.githubusercontent.com" \
+  --allowed-audiences="github-actions" \
+  --attribute-mapping="google.subject=assertion.sub,attribute.actor=assertion.actor,attribute.repository=assertion.repository,attribute.repository_owner=assertion.repository_owner" \
+  --attribute-condition="assertion.repository=='XavierAndreges/API_symfony'"
+
 ```
 
 3. Obtenir le WIF_PROVIDER :
 ```bash
-gcloud iam workload-identity-pools providers describe "github-provider" \
+gcloud iam workload-identity-pools providers describe "github-provider-3" \
   --location="global" \
-  --workload-identity-pool="github-actions-pool" \
+  --workload-identity-pool="github-actions-pool-3" \
   --format="value(name)"
 ```
 
@@ -138,3 +141,8 @@ Ces valeurs devront être ajoutées dans les secrets de votre repository GitHub 
 3. Ajoutez deux nouveaux secrets :
    - `WIF_PROVIDER` avec la valeur obtenue
    - `GCP_SA_EMAIL` avec l'email du service account 
+
+
+
+
+->>>>> La liaison au service account GCP avec IAM policy binding
