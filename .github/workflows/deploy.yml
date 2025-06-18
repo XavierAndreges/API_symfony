@@ -28,16 +28,16 @@ jobs:
 
     - name: Get OIDC Token
       id: oidc
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const token = await github.rest.actions.getActionsToken();
-          console.log('Token:', token.data.token);
-          return token.data.token;
+      run: |
+        TOKEN=$(curl -s -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+          -H "Accept: application/json" \
+          -H "Content-Type: application/json" \
+          "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=github-actions")
+        echo "token=$TOKEN" >> $GITHUB_OUTPUT
 
     - name: Decode Token
       run: |
-        echo "${{ steps.oidc.outputs.result }}" | cut -d '.' -f2 | base64 -d | jq
+        echo "${{ steps.oidc.outputs.token }}" | cut -d '.' -f2 | base64 -d | jq
 
     # - name: 'Set up Cloud SDK'
     #   uses: 'google-github-actions/setup-gcloud@v1'
