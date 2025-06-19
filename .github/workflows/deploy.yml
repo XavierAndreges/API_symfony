@@ -23,8 +23,14 @@ jobs:
       name: 'Authenticate to Google Cloud'
       uses: google-github-actions/auth@v2
       with:
+        token_format: 'id_token'
+        id_token_audience: 'github-actions'
         workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
         service_account: ${{ secrets.GCP_SA_EMAIL }}
+
+    - name: Print ID token
+      run: |
+        echo "${{ steps.auth.outputs.id_token }}" | cut -d "." -f2 | base64 -d | jq
 
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v1'
