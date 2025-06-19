@@ -25,6 +25,7 @@ jobs:
       uses: google-github-actions/auth@v2
       with:
         token_format: 'id_token'
+        id_token_audience: 'github-actions'
         workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
         service_account: ${{ secrets.GCP_SA_EMAIL }}
 
