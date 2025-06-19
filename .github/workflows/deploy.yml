@@ -25,8 +25,7 @@ jobs:
       with:
         workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
         service_account: ${{ secrets.GCP_SA_EMAIL }}
-        token_format: 'id_token'
-        audience: 'github-actions'
+        id_token_audience: 'github-actions'
 
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v1'
