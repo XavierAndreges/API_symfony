@@ -19,6 +19,26 @@ jobs:
       contents: read
 
     steps:
+      - name: Debug GitHub Actions context
+        run: |
+          echo "=== GITHUB ACTIONS CONTEXT (used for JWT generation) ==="
+          echo "Repository: ${{ github.repository }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "SHA: ${{ github.sha }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Event: ${{ github.event_name }}"
+          echo "Workflow: ${{ github.workflow }}"
+          echo "Job: ${{ github.job }}"
+          echo "Run ID: ${{ github.run_id }}"
+          echo "Run Number: ${{ github.run_number }}"
+
+      - name: Debug environment before auth
+        run: |
+          echo "=== DEBUG: Environment variables ==="
+          echo "PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}"
+          echo "WIF_PROVIDER: ${{ secrets.WIF_PROVIDER }}"
+          echo "GCP_SA_EMAIL: ${{ secrets.GCP_SA_EMAIL }}"
+
       - name: Authenticate using Workload Identity Federation
         id: auth
         uses: google-github-actions/auth@v2
@@ -42,6 +62,26 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Debug GitHub Actions context
+      run: |
+        echo "=== GITHUB ACTIONS CONTEXT (used for JWT generation) ==="
+        echo "Repository: ${{ github.repository }}"
+        echo "Ref: ${{ github.ref }}"
+        echo "SHA: ${{ github.sha }}"
+        echo "Actor: ${{ github.actor }}"
+        echo "Event: ${{ github.event_name }}"
+        echo "Workflow: ${{ github.workflow }}"
+        echo "Job: ${{ github.job }}"
+        echo "Run ID: ${{ github.run_id }}"
+        echo "Run Number: ${{ github.run_number }}"
+
+    - name: Debug environment before auth
+      run: |
+        echo "=== DEBUG: Environment variables ==="
+        echo "PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}"
+        echo "WIF_PROVIDER: ${{ secrets.WIF_PROVIDER }}"
+        echo "GCP_SA_EMAIL: ${{ secrets.GCP_SA_EMAIL }}"
+
     - id: auth
       name: 'Authenticate to Google Cloud'
       uses: google-github-actions/auth@v2
@@ -51,6 +91,16 @@ jobs:
         id_token_audience: 'github-actions'
         workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
         service_account: ${{ secrets.GCP_SA_EMAIL }}
+
+    - name: 'Debug token (even if auth failed)'
+      run: |
+        echo "=== DEBUG: Token content ==="
+        if [ -n "${{ steps.auth.outputs.id_token }}" ]; then
+          echo "${{ steps.auth.outputs.id_token }}" | cut -d "." -f2 | base64 -d | jq
+        else
+          echo "No token found - authentication failed"
+          echo "Check the error message above for details"
+        fi
 
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v1'
