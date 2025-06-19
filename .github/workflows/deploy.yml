@@ -19,18 +19,32 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Debug environment variables
+      run: |
+        echo "PROJECT_ID: $PROJECT_ID"
+        echo "GKE_CLUSTER: $GKE_CLUSTER"
+        echo "GKE_ZONE: $GKE_ZONE"
+        echo "WIF_PROVIDER: ${{ secrets.WIF_PROVIDER }}"
+        echo "GCP_SA_EMAIL: ${{ secrets.GCP_SA_EMAIL }}"
+
     - id: auth
       name: 'Authenticate to Google Cloud'
       uses: google-github-actions/auth@v2
+      continue-on-error: true
       with:
         token_format: 'id_token'
         id_token_audience: 'github-actions'
         workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
         service_account: ${{ secrets.GCP_SA_EMAIL }}
 
-    - name: Print ID token
+    - name: Print ID token (even if auth failed)
       run: |
-        echo "${{ steps.auth.outputs.id_token }}" | cut -d "." -f2 | base64 -d | jq
+        if [ -n "${{ steps.auth.outputs.id_token }}" ]; then
+          echo "Token exists, decoding..."
+          echo "${{ steps.auth.outputs.id_token }}" | cut -d "." -f2 | base64 -d | jq
+        else
+          echo "No token found - authentication likely failed"
+        fi
 
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v1'
