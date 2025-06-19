@@ -10,7 +10,7 @@ services:
     depends_on:
       - database
     environment:
-      DATABASE_URL: mysql://symfony:password@database:3306/mp?serverVersion=8.0
+      DATABASE_URL: ${DATABASE_URL}
     restart: unless-stopped
 
   nginx:
@@ -42,10 +42,10 @@ services:
     image: mysql:8.0
     container_name: API_symfony_db
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: mp
-      MYSQL_USER: symfony
-      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
@@ -58,7 +58,7 @@ services:
     environment:
       PMA_HOST: database
       PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - "8081:80"
     depends_on:

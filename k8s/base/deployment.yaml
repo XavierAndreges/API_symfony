@@ -12,6 +12,7 @@ spec:
       labels:
         app: symfony-php
     spec:
+      serviceAccountName: sa-symfony-app
       initContainers:
       - name: init-chmod
         image: busybox
@@ -36,6 +37,11 @@ spec:
             secretKeyRef:
               name: symfony-app-secret
               key: APP_SECRET
+        - name: GOOGLE_MAPS_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: google-maps-api-key
+              key: GOOGLE_MAPS_API_KEY
         volumeMounts:
         - name: symfony-code
           mountPath: /var/www/symfony
@@ -70,6 +76,7 @@ spec:
       labels:
         app: symfony-nginx
     spec:
+      serviceAccountName: sa-symfony-app
       initContainers:
       - name: init-chmod
         image: busybox

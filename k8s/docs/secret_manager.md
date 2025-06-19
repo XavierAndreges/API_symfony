@@ -44,6 +44,13 @@ gcloud secrets create symfony-app-secret \
 echo -n "$APP_SECRET" | gcloud secrets versions add symfony-app-secret --data-file=-
 ```
 
+## 2. Secret google-maps-api-key
+
+echo -n "AIzaS....." | gcloud secrets create google-maps-api-key \
+  --replication-policy="automatic" \
+  --data-file=-
+
+
 ## Vérification des Secrets
 
 Pour vérifier que les secrets ont été créés correctement :

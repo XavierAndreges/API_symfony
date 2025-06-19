@@ -1,6 +1,7 @@
 # Fichiers système
 .DS_Store
 Thumbs.db
+.cursorignore
 
 # Fichiers BD
 mp.sql
@@ -9,6 +10,8 @@ mp.sql
 .env
 .env.dev
 .env.prod
+.env.docker
+.env.docker.prod
 k8s/prod/secrets.yaml
 k8s/dev/secrets.yaml
 
