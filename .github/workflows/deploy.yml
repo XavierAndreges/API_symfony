@@ -23,20 +23,10 @@ jobs:
     - id: auth
       name: 'Authenticate to Google Cloud'
       uses: google-github-actions/auth@v2
-      continue-on-error: true
       with:
         token_format: 'id_token'
-        id_token_audience: 'https://iam.googleapis.com/projects/trans-cosine-460409-m6/locations/global/workloadIdentityPools/github-actions-pool-3/providers/github-provider-3'
         workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
         service_account: ${{ secrets.GCP_SA_EMAIL }}
-
-    - name: 'Debug ID Token'
-      run: |
-        echo "::group::Decoded ID Token"
-        jwt=$(cat ${{ steps.auth.outputs.id_token }})
-        curl -s https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=$jwt
-        echo "::endgroup::"
-
 
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v1'
