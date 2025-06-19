@@ -17,3 +17,38 @@
     # - name: Decode Token
     #   run: |
     #     echo "${{ steps.oidc.outputs.token }}" | cut -d '.' -f2 | base64 -d | jq
+
+
+
+    {
+  "actor": "XavierAndreges",
+  "actor_id": "20047168",
+  "aud": "github-actions",
+  "base_ref": "",
+  "event_name": "push",
+  "exp": 1750277809,
+  "head_ref": "",
+  "iat": 1750256209,
+  "iss": "https://token.actions.githubusercontent.com",
+  "job_workflow_ref": "XavierAndreges/API_symfony/.github/workflows/deploy.yml@refs/heads/main",
+  "job_workflow_sha": "dd7ba2a37304097e8457ae93544f344ceba86953",
+  "jti": "24502698-ec9e-4832-8900-8c85381cdff7",
+  "nbf": 1750255909,
+  "ref": "refs/heads/main",
+  "ref_protected": "false",
+  "ref_type": "branch",
+  "repository": "XavierAndreges/API_symfony",
+  "repository_id": "995403808",
+  "repository_owner": "XavierAndreges",
+  "repository_owner_id": "20047168",
+  "repository_visibility": "public",
+  "run_attempt": "1",
+  "run_id": "15735369087",
+  "run_number": "3",
+  "runner_environment": "github-hosted",
+  "sha": "dd7ba2a37304097e8457ae93544f344ceba86953",
+  "sub": "repo:XavierAndreges/API_symfony:ref:refs/heads/main",
+  "workflow": "Deploy to GKE",
+  "workflow_ref": "XavierAndreges/API_symfony/.github/workflows/deploy.yml@refs/heads/main",
+  "workflow_sha": "dd7ba2a37304097e8457ae93544f344ceba86953"
+}
