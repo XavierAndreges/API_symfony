@@ -5,7 +5,6 @@ namespace: symfony-dev
 
 resources:
   - ../base
-  - secrets.yaml
   - mysql-service.yaml
 
 patches:

@@ -58,9 +58,6 @@ spec:
           readOnly: true
           volumeAttributes:
             secretProviderClass: symfony-secrets
-      - name: nginx-config
-        configMap:
-          name: nginx-config
 ---
 apiVersion: apps/v1
 kind: Deployment

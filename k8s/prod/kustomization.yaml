@@ -5,7 +5,6 @@ namespace: symfony-prod
 
 resources:
   - ../base
-  - secrets.yaml
 
 patches:
   - target:
