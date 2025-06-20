@@ -39,6 +39,14 @@ patches:
         path: /subjects/0/namespace
         value: symfony-dev
 
+  - target:
+      kind: SecretProviderClass
+      name: symfony-secrets
+    patch: |-
+      - op: replace
+        path: /metadata/namespace
+        value: symfony-dev
+
 configMapGenerator:
   - name: symfony-config
     literals:
