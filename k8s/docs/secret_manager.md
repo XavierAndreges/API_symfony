@@ -93,3 +93,67 @@ echo -n "$APP_SECRET" | gcloud secrets versions add symfony-app-secret --data-fi
    - Gardez une trace des changements de secrets
    - Documentez les raisons des changements
    - Testez les nouvelles versions avant de les mettre en production 
+
+
+
+
+   CAS SPECIFIQUE MAPS API
+
+
+4. ✅ Définir un SecretProviderClass
+Un fichier google-maps-secret-provider.yaml :
+
+yaml
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: google-maps-api-key-provider
+spec:
+  provider: gcp
+  parameters:
+    secrets:
+      - resourceName: "projects/<PROJECT_ID>/secrets/google-maps-api-key"
+        fileName: "google-maps-api-key"
+5. ✅ Monter le secret dans le pod Symfony
+Dans ton Deployment ou Pod :
+
+yaml
+spec:
+  containers:
+    - name: symfony
+      env:
+        - name: GOOGLE_MAPS_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: google-maps-api-key-secret
+              key: google-maps-api-key
+  volumes:
+    - name: secrets-store-inline
+      csi:
+        driver: secrets-store.csi.k8s.io
+        readOnly: true
+        volumeAttributes:
+          secretProviderClass: "google-maps-api-key-provider"
+
+
+Et optionnellement, créer un Secret K8s synchronisé avec le CSI (si tu veux y accéder comme secretKeyRef) :
+
+yaml
+
+spec:
+  ...
+  secretObjects:
+    - secretName: google-maps-api-key-secret
+      type: Opaque
+      data:
+        - key: google-maps-api-key
+          objectName: google-maps-api-key
+
+6. ✅ Utiliser dans Symfony
+Dans .env :
+
+GOOGLE_MAPS_API_KEY=xxx (sera remplacé dynamiquement dans K8s)
+Dans services.yaml ou tes contrôleurs/services :
+
+php
+$mapsApiKey = $_ENV['GOOGLE_MAPS_API_KEY'] ?? null;
