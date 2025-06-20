@@ -44,5 +44,6 @@ jobs:
     - name: 'Deploy to GKE'
       run: |
         cd k8s/prod
+        kubectl create namespace symfony-prod --dry-run=client -o yaml | kubectl apply -f -
         kustomize edit set image xandreges/symfony-php:prod=${{ github.sha }}
         kustomize build . | kubectl apply -f - 
