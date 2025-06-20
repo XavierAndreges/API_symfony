@@ -18,7 +18,7 @@ patches:
         value: 1
       - op: replace
         path: /spec/template/spec/containers/0/image
-        value: xandreges/symfony-php:latest
+        value: xandreges/symfony-php:dev
       - op: replace
         path: /spec/template/spec/containers/0/env/0/valueFrom/secretKeyRef/name
         value: symfony-db-credentials
@@ -29,14 +29,6 @@ patches:
     patch: |-
       - op: replace
         path: /metadata/namespace
-        value: symfony-dev
-
-  - target:
-      kind: ClusterRoleBinding
-      name: symfony-workload-identity-binding
-    patch: |-
-      - op: replace
-        path: /subjects/0/namespace
         value: symfony-dev
 
   - target:

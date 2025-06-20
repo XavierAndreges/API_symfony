@@ -31,14 +31,6 @@ patches:
         value: symfony-prod
 
   - target:
-      kind: ClusterRoleBinding
-      name: symfony-workload-identity-binding
-    patch: |-
-      - op: replace
-        path: /subjects/0/namespace
-        value: symfony-prod
-
-  - target:
       kind: SecretProviderClass
       name: symfony-secrets
     patch: |-
