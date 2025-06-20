@@ -20,15 +20,7 @@ patches:
         value: xandreges/symfony-php:latest
       - op: replace
         path: /spec/template/spec/containers/0/env/0/valueFrom/secretKeyRef/name
-        value: symfony-secrets
-
-  - target:
-      kind: Ingress
-      name: symfony-ingress
-    patch: |-
-      - op: replace
-        path: /spec/rules/0/host
-        value: dev.symfony.local
+        value: symfony-db-credentials
 
 configMapGenerator:
   - name: symfony-config
