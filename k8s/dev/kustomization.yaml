@@ -6,6 +6,7 @@ namespace: symfony-dev
 resources:
   - ../base
   - mysql-service.yaml
+  - ingress.yaml
 
 patches:
   - target:

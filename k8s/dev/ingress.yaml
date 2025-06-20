@@ -15,4 +15,4 @@ spec:
               service:
                 name: symfony-nginx
                 port:
-                  number: 80
+                  number: 80 
