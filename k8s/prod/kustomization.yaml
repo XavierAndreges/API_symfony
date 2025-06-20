@@ -22,6 +22,22 @@ patches:
         path: /spec/template/spec/containers/0/env/0/valueFrom/secretKeyRef/name
         value: symfony-db-credentials
 
+  - target:
+      kind: ServiceAccount
+      name: sa-symfony-app
+    patch: |-
+      - op: replace
+        path: /metadata/namespace
+        value: symfony-prod
+
+  - target:
+      kind: ClusterRoleBinding
+      name: symfony-workload-identity-binding
+    patch: |-
+      - op: replace
+        path: /subjects/0/namespace
+        value: symfony-prod
+
 configMapGenerator:
   - name: symfony-config
     literals:
