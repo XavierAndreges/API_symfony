@@ -19,6 +19,15 @@ spec:
         imagePullPolicy: Never
         ports:
         - containerPort: 9000
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+            ephemeral-storage: "500Mi"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+            ephemeral-storage: "1Gi"
         env:
         - name: DATABASE_URL
           valueFrom:
@@ -67,6 +76,15 @@ spec:
         image: nginx:alpine
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+            ephemeral-storage: "100Mi"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+            ephemeral-storage: "200Mi"
         volumeMounts:
         - name: nginx-config
           mountPath: /etc/nginx/conf.d/default.conf
