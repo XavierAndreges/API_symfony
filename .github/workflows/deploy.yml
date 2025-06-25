@@ -36,10 +36,21 @@ jobs:
 
     - name: 'Configure Docker for GCR'
       run: |
-        gcloud auth configure-docker $REGISTRY --quiet
+        gcloud auth configure-docker gcr.io --quiet
+        gcloud config set container/use_application_default_credentials true
+
+    - name: 'Debug Docker Configuration'
+      run: |
+        echo "=== Docker config ==="
+        cat ~/.docker/config.json
+        echo "=== GCloud auth list ==="
+        gcloud auth list
+        echo "=== Testing GCR access ==="
+        gcloud auth print-access-token
 
     - name: 'Build and Push Docker Image'
       run: |
+        gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin gcr.io
         docker build -t $IMAGE_NAME:${{ github.sha }} -f docker/php/Dockerfile .
         docker push $IMAGE_NAME:${{ github.sha }}
 
