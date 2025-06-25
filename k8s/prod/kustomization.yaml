@@ -17,7 +17,7 @@ patches:
         value: 1
       - op: replace
         path: /spec/template/spec/containers/0/image
-        value: xandreges/symfony-php:prod
+        value: gcr.io/trans-cosine-460409-m6/symfony-php:latest
       - op: replace
         path: /spec/template/spec/containers/0/env/0/valueFrom/secretKeyRef/name
         value: symfony-db-credentials
