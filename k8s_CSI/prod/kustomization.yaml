@@ -22,6 +22,22 @@ patches:
         path: /spec/template/spec/containers/0/env/0/valueFrom/secretKeyRef/name
         value: symfony-db-credentials
 
+  - target:
+      kind: ServiceAccount
+      name: sa-symfony-app
+    patch: |-
+      - op: replace
+        path: /metadata/namespace
+        value: symfony-prod
+
+  - target:
+      kind: SecretProviderClass
+      name: symfony-secrets
+    patch: |-
+      - op: replace
+        path: /metadata/namespace
+        value: symfony-prod
+
 configMapGenerator:
   - name: symfony-config
     literals:

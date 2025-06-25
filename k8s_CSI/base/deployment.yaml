@@ -12,6 +12,7 @@ spec:
       labels:
         app: symfony-php
     spec:
+      serviceAccountName: sa-symfony-app
       containers:
       - name: php
         image: symfony-php:latest
@@ -43,6 +44,17 @@ spec:
             secretKeyRef:
               name: google-maps-api-key
               key: GOOGLE_MAPS_API_KEY
+        volumeMounts:
+        - name: secrets-store
+          mountPath: "/mnt/secrets"
+          readOnly: true
+      volumes:
+      - name: secrets-store
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: symfony-secrets
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -58,6 +70,7 @@ spec:
       labels:
         app: symfony-nginx
     spec:
+      serviceAccountName: sa-symfony-app
       containers:
       - name: nginx
         image: nginx:alpine

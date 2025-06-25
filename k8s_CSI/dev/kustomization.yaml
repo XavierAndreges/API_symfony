@@ -1,10 +1,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: symfony-prod
+namespace: symfony-dev
 
 resources:
   - ../base
+  - mysql-service.yaml
   - ingress.yaml
 
 patches:
@@ -17,13 +18,29 @@ patches:
         value: 1
       - op: replace
         path: /spec/template/spec/containers/0/image
-        value: xandreges/symfony-php:prod
+        value: xandreges/symfony-php:dev
       - op: replace
         path: /spec/template/spec/containers/0/env/0/valueFrom/secretKeyRef/name
         value: symfony-db-credentials
 
+  - target:
+      kind: ServiceAccount
+      name: sa-symfony-app
+    patch: |-
+      - op: replace
+        path: /metadata/namespace
+        value: symfony-dev
+
+  - target:
+      kind: SecretProviderClass
+      name: symfony-secrets
+    patch: |-
+      - op: replace
+        path: /metadata/namespace
+        value: symfony-dev
+
 configMapGenerator:
   - name: symfony-config
     literals:
-      - APP_ENV=prod
-      - APP_DEBUG=false 
+      - APP_ENV=dev
+      - APP_DEBUG=true 
