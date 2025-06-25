@@ -36,6 +36,9 @@ RUN composer install --no-scripts --no-autoloader
 # Copy the rest of the application
 COPY symfony/ .
 
+# Create empty .env file to prevent Symfony from looking for it
+RUN touch .env
+
 # Create necessary directories and set permissions
 RUN mkdir -p var/cache var/log var/sessions \
     && chown -R www-data:www-data var/cache var/log var/sessions \
