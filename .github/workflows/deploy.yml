@@ -8,7 +8,6 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
-  REGISTRY: europe-west1-docker.pkg.dev
   IMAGE_NAME: europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/symfony-images/symfony-php
 
 jobs:
@@ -36,7 +35,7 @@ jobs:
 
     - name: 'Configure Docker for Artifact Registry'
       run: |
-        gcloud auth configure-docker $REGISTRY --quiet
+        gcloud auth configure-docker europe-west1-docker.pkg.dev --quiet
         gcloud config set container/use_application_default_credentials true
 
     - name: 'Debug Docker Configuration'
@@ -45,12 +44,12 @@ jobs:
         cat ~/.docker/config.json
         echo "=== GCloud auth list ==="
         gcloud auth list
-        echo "=== Testing GCR access ==="
+        echo "=== Testing Artifact Registry access ==="
         gcloud auth print-access-token
 
     - name: 'Build and Push Docker Image'
       run: |
-        gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin gcr.io
+        gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin europe-west1-docker.pkg.dev
         docker build -t $IMAGE_NAME:${{ github.sha }} -f docker/php/Dockerfile .
         docker push $IMAGE_NAME:${{ github.sha }}
 
