@@ -28,6 +28,31 @@ spec:
             cpu: "500m"
             ephemeral-storage: "1Gi"
         env:
+        - name: APP_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: symfony-config
+              key: APP_ENV
+        - name: APP_DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: symfony-config
+              key: APP_DEBUG
+        - name: APP_SECURE
+          valueFrom:
+            configMapKeyRef:
+              name: symfony-config
+              key: APP_SECURE
+        - name: SESSION_SECURE
+          valueFrom:
+            configMapKeyRef:
+              name: symfony-config
+              key: SESSION_SECURE
+        - name: COOKIE_SECURE
+          valueFrom:
+            configMapKeyRef:
+              name: symfony-config
+              key: COOKIE_SECURE
         - name: DATABASE_URL
           valueFrom:
             secretKeyRef:

@@ -26,4 +26,7 @@ configMapGenerator:
   - name: symfony-config
     literals:
       - APP_ENV=prod
-      - APP_DEBUG=false 
+      - APP_DEBUG=false
+      - APP_SECURE=true
+      - SESSION_SECURE=true
+      - COOKIE_SECURE=true 
