@@ -15,7 +15,7 @@ spec:
       containers:
       - name: php
         image: symfony-php:latest
-        imagePullPolicy: Never
+        imagePullPolicy: Always
         ports:
         - containerPort: 9000
         resources:
