@@ -8,7 +8,8 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
-  IMAGE_NAME: europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/symfony-images/symfony-php
+  IMAGE_NAME_PHP: europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/symfony-images/symfony-php
+  IMAGE_NAME_NGINX: europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/symfony-images/symfony-nginx
 
 jobs:
 
@@ -47,11 +48,13 @@ jobs:
         echo "=== Testing Artifact Registry access ==="
         gcloud auth print-access-token
 
-    - name: 'Build and Push Docker Image'
+    - name: 'Build and Push Docker Images'
       run: |
         gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin europe-west1-docker.pkg.dev
-        docker build -t $IMAGE_NAME:${{ github.sha }} -f docker/php/Dockerfile .
-        docker push $IMAGE_NAME:${{ github.sha }}
+        docker build -t $IMAGE_NAME_PHP:${{ github.sha }} -f docker/php/Dockerfile .
+        docker build -t $IMAGE_NAME_NGINX:${{ github.sha }} -f docker/nginx/Dockerfile docker/nginx/
+        docker push $IMAGE_NAME_PHP:${{ github.sha }}
+        docker push $IMAGE_NAME_NGINX:${{ github.sha }}
 
     - name: Install gke-gcloud-auth-plugin
       run: |
@@ -65,5 +68,6 @@ jobs:
       run: |
         cd k8s/prod
         kubectl create namespace symfony-prod --dry-run=client -o yaml | kubectl apply -f -
-        kustomize edit set image europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/symfony-images/symfony-php:latest=$IMAGE_NAME:${{ github.sha }}
+        kustomize edit set image europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/symfony-images/symfony-php:latest=$IMAGE_NAME_PHP:${{ github.sha }}
+        kustomize edit set image europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/symfony-images/symfony-nginx:latest=$IMAGE_NAME_NGINX:${{ github.sha }}
         kustomize build . | kubectl apply -f - 

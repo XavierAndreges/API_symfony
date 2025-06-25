@@ -18,6 +18,16 @@ patches:
       - op: replace
         path: /spec/template/spec/containers/0/image
         value: europe-west1-docker.pkg.dev/trans-cosine-460409-m6/symfony-images/symfony-php:latest
+  - target:
+      kind: Deployment
+      name: symfony-nginx
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: europe-west1-docker.pkg.dev/trans-cosine-460409-m6/symfony-images/symfony-nginx:latest
 
 configMapGenerator:
   - name: symfony-config

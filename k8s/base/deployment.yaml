@@ -15,7 +15,7 @@ spec:
       containers:
       - name: php
         image: symfony-php:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
         - containerPort: 9000
         resources:
@@ -85,7 +85,8 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:alpine
+        image: symfony-nginx:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         resources:
@@ -97,11 +98,29 @@ spec:
             memory: "128Mi"
             cpu: "100m"
             ephemeral-storage: "200Mi"
-        volumeMounts:
-        - name: nginx-config
-          mountPath: /etc/nginx/conf.d/default.conf
-          subPath: default.conf
-      volumes:
-      - name: nginx-config
-        configMap:
-          name: nginx-config 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: symfony-php
+spec:
+  selector:
+    app: symfony-php
+  ports:
+  - protocol: TCP
+    port: 9000
+    targetPort: 9000
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: symfony-nginx
+spec:
+  selector:
+    app: symfony-nginx
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: ClusterIP 

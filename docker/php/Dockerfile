@@ -47,3 +47,7 @@ RUN mkdir -p var/cache var/log var/sessions \
 
 # Generate autoloader
 RUN composer dump-autoload --optimize
+
+EXPOSE 9000
+
+CMD ["php-fpm"]
