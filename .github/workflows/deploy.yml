@@ -8,8 +8,8 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
-  REGISTRY: gcr.io
-  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/symfony-php
+  REGISTRY: europe-west1-docker.pkg.dev
+  IMAGE_NAME: europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/symfony-images/symfony-php
 
 jobs:
 
@@ -34,10 +34,10 @@ jobs:
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v1'
 
-    - name: 'Configure Docker for GCR'
+    - name: 'Configure Docker for Artifact Registry'
       run: |
-        gcloud auth configure-docker gcr.io --quiet
-        gcloud config set container/use_application_default_credentials true
+        gcloud auth configure-docker $REGISTRY --quiet
+        gcloud config set container/use_application_default_credentials trueue
 
     - name: 'Debug Docker Configuration'
       run: |
@@ -66,5 +66,5 @@ jobs:
       run: |
         cd k8s/prod
         kubectl create namespace symfony-prod --dry-run=client -o yaml | kubectl apply -f -
-        kustomize edit set image gcr.io/${{ secrets.GCP_PROJECT_ID }}/symfony-php:latest=$IMAGE_NAME:${{ github.sha }}
+        kustomize edit set image europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/symfony-images/symfony-php:latest=$IMAGE_NAME:${{ github.sha }}
         kustomize build . | kubectl apply -f - 
