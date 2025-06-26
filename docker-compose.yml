@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-    container_name: API_symfony_php
+    container_name: symfony-php
     volumes:
       - php_socket:/var/run/php
     depends_on:

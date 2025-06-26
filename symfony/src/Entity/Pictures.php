@@ -9,9 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'Pictures')]
 class Pictures
 {
+    #[ORM\Id]
     #[ORM\Column(length: 50)]
     private string $name;
 
+    #[ORM\Id]
     #[ORM\Column(length: 50)]
     private string $idRepName;
 
