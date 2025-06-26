@@ -1,4 +1,4 @@
-FROM php:8.3-fpm
+FROM php:8.3-cli
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -19,10 +19,6 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Configure PHP-FPM
-RUN sed -i '/^listen =/d' /usr/local/etc/php-fpm.d/www.conf && \
-    echo "listen = 9000" >> /usr/local/etc/php-fpm.d/www.conf
 
 # Set working directory
 WORKDIR /var/www/symfony
@@ -48,6 +44,7 @@ RUN mkdir -p var/cache var/log var/sessions \
 # Generate autoloader
 RUN composer dump-autoload --optimize
 
-EXPOSE 9000
+EXPOSE 8000
 
-CMD ["php-fpm"]
+# Start Symfony's built-in web server
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
